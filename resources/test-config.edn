@@ -1,0 +1,10 @@
+{:root-ns :com.example.api
+ :base "https://api.example.com"
+ :routes
+ [["thing"
+   [#http/post :create!
+    #http/get (:details :thing/id)
+    #http/post (:update! :thing/id)
+    #http/delete (:delete! :thing/id)]]
+  ["hello"
+   [#http/get (:greet :greeting/name)]]]}

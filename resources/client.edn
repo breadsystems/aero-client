@@ -1,0 +1,9 @@
+{:root-ns :northflank.v1
+ :base "https://api.northflank.com/v1"
+ :routes
+ [["projects" :project/id "secrets" [#http/get :list
+                                     #http/post :create!
+                                     #http/get (:get :secret/id)
+                                     #http/delete (:delete! :secret/id)
+                                     #http/post (:update! :secret/id)]]]
+ :headers {"Authorization" #join ["Bearer: " #env MY_TOKEN]}}
