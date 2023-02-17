@@ -18,6 +18,8 @@
                 :lib 'systems.bread/harrow
                 :version patch-version
                 :basis (b/create-basis {:project "deps.edn"})
+                :scm {:tag (str "v" patch-version)
+                      :url "https://github.com/breadsystems/harrow"}
                 :src-dirs ["src"]})
   (b/copy-dir {:src-dirs ["src"]
                :target-dir "target/classes"})
