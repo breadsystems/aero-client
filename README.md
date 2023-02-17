@@ -1,5 +1,7 @@
 # Harrow
 
+![Build status](https://github.com/breadsystems/harrow/actions/workflows/test.yml/badge.svg)
+
 Define simple HTTP API clients with [Aero](https://github.com/juxt/aero).
 
 ## Usage
