@@ -39,8 +39,8 @@
       [(string/join "." (map name (filter identity ns-segments)))
        (name kname)])))
 
-(defn- req-kv [api route subroute]
-  (let [{:keys [base root-ns]} api
+(defn- req-kv [client route subroute]
+  (let [{:harrow/keys [base root-ns]} client
         req-name (:route/name subroute)
         req-ns (concat [root-ns] (filter string? route))
         ns-segments (filter identity req-ns)
@@ -56,7 +56,7 @@
     [k v]))
 
 (defn- req-kvs [client route]
-  (let [{:keys [base root-ns]} client
+  (let [{:harrow/keys [base root-ns]} client
         subroutes (last route)
         route-name (first subroutes)
         named? (or (string? route-name) (keyword? route-name))
@@ -66,7 +66,11 @@
     (map (partial req-kv client route) subroutes)))
 
 (defn desc->client [{:keys [routes] :as desc}]
-  (assoc desc :harrow/requests (into {} (mapcat #(req-kvs desc %) routes))))
+  (as-> desc $
+    (clojure.set/rename-keys $ {:root-ns :harrow/root-ns
+                                :base :harrow/base
+                                :routes :harrow/routes})
+    (assoc $ :harrow/requests (into {} (mapcat #(req-kvs $ %) routes)))))
 
 (defn build-client [file]
   (desc->client (aero/read-config file)))
