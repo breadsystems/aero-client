@@ -38,7 +38,7 @@
          (-> "test-config.edn"
              io/resource
              api/build-client
-             :requests))))
+             :harrow/requests))))
 
 (deftest test-request-keys
   (let [client (-> "test-config.edn" io/resource api/build-client)]
@@ -113,8 +113,8 @@
                           :route/segments [:my-param]
                           :method :get}]]]
       ;; Override defaults to pass nothing through.
-      :pass-thru-config #{}
-      :pass-thru-params #{}}
+      :harrow/pass-thru-config #{}
+      :harrow/pass-thru-params #{}}
      [:com.example.api.my.endpoint/foo {:my-param "abc"
                                         :query-params {:x "X"}}]]
 
@@ -134,8 +134,8 @@
                           :route/segments [:my-param]
                           :method :get}]]]
       ;; Override defaults to pass nothing through.
-      :pass-thru-config #{:headers {"X-Test" "value"} :extra}
-      :pass-thru-params #{:query-params :extra-param}}
+      :harrow/pass-thru-config #{:headers {"X-Test" "value"} :extra}
+      :harrow/pass-thru-params #{:query-params :extra-param}}
      [:com.example.api.my.endpoint/foo {:my-param "abc"
                                         :extra-param 123
                                         :query-params {:x "X"}}]]

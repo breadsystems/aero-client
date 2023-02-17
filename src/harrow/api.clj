@@ -66,15 +66,15 @@
     (map (partial req-kv client route) subroutes)))
 
 (defn desc->client [{:keys [routes] :as desc}]
-  (assoc desc :requests (into {} (mapcat #(req-kvs desc %) routes))))
+  (assoc desc :harrow/requests (into {} (mapcat #(req-kvs desc %) routes))))
 
 (defn build-client [file]
   (desc->client (aero/read-config file)))
 
 (defn build-request [client endpoint params]
-  (let [route (get-in client [:requests endpoint])
+  (let [route (get-in client [:harrow/requests endpoint])
         route-url (url client route params)
-        {:keys [pass-thru-config pass-thru-params]
+        {:harrow/keys [pass-thru-config pass-thru-params]
          :or {pass-thru-config [:headers]
               pass-thru-params [:query-params]}} client]
     (merge {:method (:method route)
@@ -83,14 +83,14 @@
            (select-keys params pass-thru-params))))
 
 (defn request-keys [client]
-  (-> client :requests keys))
+  (-> client :harrow/requests keys))
 
 (comment
   (def $client (build-client (io/resource "client.edn")))
 
   (aero/read-config (io/resource "client.edn"))
   (request-keys $client)
-  (get-in $client [:requests :northflank.v1.projects.secrets/get])
+  (get-in $client [:harrow/requests :northflank.v1.projects.secrets/get])
   (build-request $client :northflank.v1.projects.secrets/list {:project/id "xyz"})
   (build-request $client :northflank.v1.projects.secrets/create!
                  {:project/id "xyz"
