@@ -6,4 +6,4 @@
                                      #http/get (:get :secret/id)
                                      #http/delete (:delete! :secret/id)
                                      #http/post (:update! :secret/id)]]]
- :headers {"Authorization" #join ["Bearer: " #env MY_TOKEN]}}
+ :headers {"Authorization" #envf ["Bearer: %s" MY_TOKEN]}}
