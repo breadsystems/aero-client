@@ -16,24 +16,6 @@ jobs:
           # Fetch entire commit history.
           fetch-depth: 0
 
-      - name: Setup tag
-        run: |
-          echo "TAG = " $(clojure -T:build tag)
-          echo "RELEASE_TAG=$(clojure -T:build tag)" >> $GITHUB_ENV
-
-      - name: Create tag
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const {RELEASE_TAG} = process.env
-            console.log(RELEASE_TAG)
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `refs/tags/${RELEASE_TAG}`,
-              sha: context.sha,
-            })
-
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -53,6 +35,24 @@ jobs:
             ~/.gitlibs
             ~/.deps.clj
           key: cljdeps-${{ hashFiles('deps.edn') }}
+
+      - name: Setup tag
+        run: |
+          echo "TAG = " $(clojure -T:build tag)
+          echo "RELEASE_TAG=$(clojure -T:build tag)" >> $GITHUB_ENV
+
+      - name: Create tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const {RELEASE_TAG} = process.env
+            console.log(RELEASE_TAG)
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${RELEASE_TAG}`,
+              sha: context.sha,
+            })
 
       - name: Build release
         env:
