@@ -1,6 +1,7 @@
 # Harrow
 
 ![Build status](https://github.com/breadsystems/harrow/actions/workflows/test.yml/badge.svg)
+[![Clojars Project](https://img.shields.io/clojars/v/systems.bread/harrow.svg)](https://clojars.org/systems.bread/harrow)
 
 Define simple HTTP API clients with [Aero](https://github.com/juxt/aero).
 
