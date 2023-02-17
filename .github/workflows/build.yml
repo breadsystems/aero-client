@@ -1,13 +1,13 @@
 name: release
 run-name: Build a release
 on: push
-#  pull_request:
-#    types:
-#      - closed
+  pull_request:
+    types:
+      - closed
 
 jobs:
   build-release:
-    #if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
