@@ -1,9 +1,9 @@
 name: release
 run-name: Build a release
-on:
-  pull_request:
-    types:
-      - closed
+on: [push, pull_request]
+#  pull_request:
+#    types:
+#      - closed
 
 jobs:
   build-release:
@@ -33,7 +33,10 @@ jobs:
             ~/.deps.clj
           key: cljdeps-${{ hashFiles('deps.edn') }}
 
-      - run: |
+      - name: Build release
+        env:
+          CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+        run: |
           echo test release one two
           clojure -T:build jar
           clojure -T:build deploy
