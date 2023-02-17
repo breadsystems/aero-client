@@ -34,7 +34,7 @@ jobs:
           key: cljdeps-${{ hashFiles('deps.edn') }}
 
       - name: Build release
-        with:
+        env:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
         run: |
           echo test release one two
