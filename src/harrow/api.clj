@@ -85,13 +85,6 @@
 (defn request-keys [client]
   (-> client :requests keys))
 
-(defmacro defendpoint [sym client route-name]
-  `(def ~sym [params#]
-     (http/request (build-request ~client ~route-name params#))))
-
-(macroexpand
-  '(defendpoint get-secret {:requests {}} :northflank.v1.projects.secrets/get))
-
 (comment
   (def $client (build-client (io/resource "client.edn")))
 
