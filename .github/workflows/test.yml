@@ -29,5 +29,5 @@ jobs:
           key: cljdeps-${{ hashFiles('deps.edn') }}
 
       - name: Run tests
-        run: bin/ci
+        run: clojure -M:dev -m kaocha.runner
 
