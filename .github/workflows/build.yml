@@ -34,5 +34,6 @@ jobs:
           key: cljdeps-${{ hashFiles('deps.edn') }}
 
       - run: |
+          echo test release one two
           clojure -T:build jar
           clojure -T:build deploy
