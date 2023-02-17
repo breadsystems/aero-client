@@ -5,40 +5,44 @@
     [harrow.api :as api]))
 
 (deftest test-build-client
-  (is (= {:com.example.api.thing/create!
-          {:route/name :create!
-           :route/config {}
-           :route/segments []
-           :method :post
-           :url/join ["https://api.example.com" "thing"]}
-          :com.example.api.thing/details
-          {:route/name :details
-           :route/config {}
-           :route/segments [:thing/id]
-           :method :get
-           :url/join ["https://api.example.com" "thing" :thing/id]}
-          :com.example.api.thing/update!
-          {:route/name :update!
-           :route/config {}
-           :route/segments [:thing/id]
-           :method :post
-           :url/join ["https://api.example.com" "thing" :thing/id]}
-          :com.example.api.thing/delete!
-          {:route/name :delete!
-           :route/config {}
-           :route/segments [:thing/id]
-           :method :delete
-           :url/join ["https://api.example.com" "thing" :thing/id]}
-          :com.example.api.hello/greet
-          {:route/name :greet
-           :route/config {}
-           :route/segments [:greeting/name]
-           :method :get
-           :url/join ["https://api.example.com" "hello" :greeting/name]}}
-         (-> "test-config.edn"
-             io/resource
-             api/build-client
-             :harrow/requests))))
+  (let [requests
+        {:com.example.api.thing/create!
+         {:route/name :create!
+          :route/config {}
+          :route/segments []
+          :method :post
+          :url/join ["https://api.example.com" "thing"]}
+         :com.example.api.thing/details
+         {:route/name :details
+          :route/config {}
+          :route/segments [:thing/id]
+          :method :get
+          :url/join ["https://api.example.com" "thing" :thing/id]}
+         :com.example.api.thing/update!
+         {:route/name :update!
+          :route/config {}
+          :route/segments [:thing/id]
+          :method :post
+          :url/join ["https://api.example.com" "thing" :thing/id]}
+         :com.example.api.thing/delete!
+         {:route/name :delete!
+          :route/config {}
+          :route/segments [:thing/id]
+          :method :delete
+          :url/join ["https://api.example.com" "thing" :thing/id]}
+         :com.example.api.hello/greet
+         {:route/name :greet
+          :route/config {}
+          :route/segments [:greeting/name]
+          :method :get
+          :url/join ["https://api.example.com" "hello" :greeting/name]}}]
+  (is (= requests (-> "resources/test-config.edn"
+                      api/build-client
+                      :harrow/requests)))
+  (is (= requests (-> "test-config.edn"
+                      io/resource
+                      api/build-client
+                      :harrow/requests)))))
 
 (deftest test-request-keys
   (let [client (-> "test-config.edn" io/resource api/build-client)]
