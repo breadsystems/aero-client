@@ -8,6 +8,9 @@
 (def patch-version (format "%s.%s" minor-version (b/git-count-revs nil)))
 (def jar-file (format "target/harrow-%s.jar" patch-version))
 
+(defn tag [_]
+  (print (str "v" patch-version)))
+
 (defn clean [_]
   (println "Cleaning target...")
   (b/delete {:path "target"}))
