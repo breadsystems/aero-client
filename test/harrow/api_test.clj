@@ -80,6 +80,68 @@
 
       )))
 
+(deftest test-build-request-pass-thru
+  (are
+    [req conf]
+    (= req (let [[client-desc args] conf
+                 client (api/desc->client client-desc)]
+             (apply api/build-request client args)))
+
+    {:method :get
+     :url "https://api.example.com/my/endpoint/abc"
+     :headers {"X-Test" "value"}
+     :query-params {:x "X"}}
+    [{:root-ns :com.example.api
+      :base "https://api.example.com"
+      :headers {"X-Test" "value"}
+      :routes
+      [["my" "endpoint" [{:route/name :foo
+                          :route/config {}
+                          :route/segments [:my-param]
+                          :method :get}]]]}
+     [:com.example.api.my.endpoint/foo {:my-param "abc"
+                                        :query-params {:x "X"}}]]
+
+    {:method :get
+     :url "https://api.example.com/my/endpoint/abc"}
+    [{:root-ns :com.example.api
+      :base "https://api.example.com"
+      :headers {"X-Test" "value"}
+      :routes
+      [["my" "endpoint" [{:route/name :foo
+                          :route/config {}
+                          :route/segments [:my-param]
+                          :method :get}]]]
+      ;; Override defaults to pass nothing through.
+      :pass-thru-config #{}
+      :pass-thru-params #{}}
+     [:com.example.api.my.endpoint/foo {:my-param "abc"
+                                        :query-params {:x "X"}}]]
+
+    {:method :get
+     :url "https://api.example.com/my/endpoint/abc"
+     :headers {"X-Test" "value"}
+     :query-params {:x "X"}
+     :extra :EXTRA!
+     :extra-param 123}
+    [{:root-ns :com.example.api
+      :base "https://api.example.com"
+      :headers {"X-Test" "value"}
+      :extra :EXTRA!
+      :routes
+      [["my" "endpoint" [{:route/name :foo
+                          :route/config {}
+                          :route/segments [:my-param]
+                          :method :get}]]]
+      ;; Override defaults to pass nothing through.
+      :pass-thru-config #{:headers {"X-Test" "value"} :extra}
+      :pass-thru-params #{:query-params :extra-param}}
+     [:com.example.api.my.endpoint/foo {:my-param "abc"
+                                        :extra-param 123
+                                        :query-params {:x "X"}}]]
+
+    ))
+
 (comment
   (require '[kaocha.repl :as k])
   (k/run *ns*))

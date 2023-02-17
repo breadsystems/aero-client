@@ -74,8 +74,9 @@
 (defn build-request [client endpoint params]
   (let [route (get-in client [:requests endpoint])
         route-url (url client route params)
-        pass-thru-config [:headers]
-        pass-thru-params [:query-params]]
+        {:keys [pass-thru-config pass-thru-params]
+         :or {pass-thru-config [:headers]
+              pass-thru-params [:query-params]}} client]
     (merge {:method (:method route)
             :url route-url}
            (select-keys client pass-thru-config)
