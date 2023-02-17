@@ -1,13 +1,13 @@
 name: release
 run-name: Build a release
-on:
-  pull_request:
-    types:
-      - closed
+on: push
+#  pull_request:
+#    types:
+#      - closed
 
 jobs:
   build-release:
-    if: github.event.pull_request.merged == true
+    #if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,5 +38,5 @@ jobs:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
         run: |
-          clojure -T:build jar
+          #clojure -T:build jar
           clojure -T:build deploy
