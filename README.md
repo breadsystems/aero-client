@@ -6,7 +6,7 @@ Define simple HTTP API clients with [Aero](https://github.com/juxt/aero).
 
 Define your client using a simple Aero (EDN) config:
 
-```
+```clj
 ; client.edn
 {:ns :com.example.api.v1
  :base "https://api.example.com/v1"
@@ -23,7 +23,7 @@ Define your client using a simple Aero (EDN) config:
 
 Create a client description from your config:
 
-```
+```clj
 (ns my-app
   (:require
     [org.httpkit.client :as http]
@@ -40,7 +40,7 @@ Create a client description from your config:
 
 Build a complete HTTP request for a specific endpoint:
 
-```
+```clj
 (harrow/build-request
   api :com.example.api.v1.hello/greet
   {:greeting/name "World"})
@@ -59,7 +59,7 @@ Build a complete HTTP request for a specific endpoint:
 
 Call some endpoints!
 
-```
+```clj
 ;; Assume the /hello endpoint implements a simple "Hello, {name}!" program...
 (http/request (harrow/build-request api :com.example.api.v1.hello/greet
                                     {:greeting/name "World"}))
