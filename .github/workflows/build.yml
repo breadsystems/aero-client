@@ -33,7 +33,10 @@ jobs:
             ~/.deps.clj
           key: cljdeps-${{ hashFiles('deps.edn') }}
 
-      - run: |
+      - name: Build release
+        with:
+          CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+        run: |
           echo test release one two
           clojure -T:build jar
           clojure -T:build deploy
