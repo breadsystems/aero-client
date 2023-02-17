@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-clojure -T:build clean
-clojure -T:build jar
-clojure -T:build deploy
