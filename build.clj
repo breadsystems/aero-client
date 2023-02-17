@@ -28,9 +28,6 @@
 
 (defn deploy [_]
   (println "Deploying to Clojars...")
-  (prn 'git (b/git-count-revs nil))
-  (prn 'patch patch-version)
-  #_
   (dd/deploy {:installer :remote
               :artifact jar-file
               :pom-file (b/pom-path {:lib 'systems.bread/harrow
