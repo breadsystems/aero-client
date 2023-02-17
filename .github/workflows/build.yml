@@ -38,7 +38,6 @@ jobs:
 
       - name: Setup tag
         run: |
-          echo "TAG = " $(clojure -T:build tag)
           echo "RELEASE_TAG=$(clojure -T:build tag)" >> $GITHUB_ENV
 
       - name: Create tag
@@ -46,7 +45,6 @@ jobs:
         with:
           script: |
             const {RELEASE_TAG} = process.env
-            console.log(RELEASE_TAG)
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
