@@ -4,17 +4,23 @@
     [harrow.impl.requests :as req]
     [aero.core :as aero]))
 
-(defn desc->client [{:keys [routes] :as desc}]
+(defn desc->client
+  "Takes a client description map and returns a client"
+  [{:keys [routes] :as desc}]
   (as-> desc $
     (clojure.set/rename-keys $ {:root-ns :harrow/root-ns
                                 :base :harrow/base
                                 :routes :harrow/routes})
     (assoc $ :harrow/requests (into {} (mapcat #(req/kvs $ %) routes)))))
 
-(defn build-client [file]
+(defn build-client
+  "Takes a filename or resource and returns a client"
+  [file]
   (desc->client (aero/read-config file)))
 
-(defn build-request [client endpoint params]
+(defn build-request
+  "Returns an HTTP Kit-style request map for endpoint with the given params"
+  [client endpoint params]
   (let [route (get-in client [:harrow/requests endpoint])
         route-url (req/url client route params)
         {:harrow/keys [pass-thru-config pass-thru-params]
@@ -25,7 +31,9 @@
            (select-keys client pass-thru-config)
            (select-keys params pass-thru-params))))
 
-(defn request-keys [client]
+(defn request-keys
+  "Returns the request keys in the given client spec as a collection"
+  [client]
   (-> client :harrow/requests keys))
 
 (comment
