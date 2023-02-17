@@ -19,7 +19,7 @@ jobs:
           cli: 1.11.1.1224
 
       - name: Cache Clojure deps
-        users: actions/cache@v3
+        user: actions/cache@v3
         with:
           path: |
             ~/.m2/repository
