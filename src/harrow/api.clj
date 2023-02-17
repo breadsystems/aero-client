@@ -92,14 +92,14 @@
   '(defendpoint get-secret {:requests {}} :northflank.v1.projects.secrets/get))
 
 (comment
-  (def client (build-client (io/resource "client.edn")))
+  (def $client (build-client (io/resource "client.edn")))
 
-  (request-keys client)
-
-  (get-in client [:requests :northflank.v1.projects.secrets/get])
-  (build-request client :northflank.v1.projects.secrets/list {:project/id "xyz"})
-  (build-request client :northflank.v1.projects.secrets/create!
+  (aero/read-config (io/resource "client.edn"))
+  (request-keys $client)
+  (get-in $client [:requests :northflank.v1.projects.secrets/get])
+  (build-request $client :northflank.v1.projects.secrets/list {:project/id "xyz"})
+  (build-request $client :northflank.v1.projects.secrets/create!
                  {:project/id "xyz"
                   :query-params {:data {:x "X"}}})
-  (build-request client :northflank.v1.projects.secrets/get {:project/id "qwerty"})
-  (build-request client :northflank.v1.projects.secrets/delete! {:project/id "xyz"}))
+  (build-request $client :northflank.v1.projects.secrets/get {:project/id "qwerty"})
+  (build-request $client :northflank.v1.projects.secrets/delete! {:project/id "xyz"}))
