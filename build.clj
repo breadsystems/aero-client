@@ -28,7 +28,7 @@
 
 (defn deploy [_]
   (println "Deploying to Clojars...")
-  (println (System/getenv "CLOJARS_USERNAME"))
+  (println (nil? (System/getenv "CLOJARS_USERNAME")))
   (dd/deploy {:installer :remote
               :artifact jar-file
               :pom-file (b/pom-path {:lib 'systems.bread/harrow
