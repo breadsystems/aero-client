@@ -1,83 +1,22 @@
 (ns harrow.api
   (:require
-    [clojure.string :as string]
-    [clojure.edn :as edn]
-    [clojure.java.io :as io]
+    [harrow.impl.readers]
+    [harrow.impl.requests :as req]
     [aero.core :as aero]))
-
-(defn- http-route [form & {:as route}]
-  (let [form (if (list? form) form (list form))
-        [sym config & segments] form
-        [config segments] (if (map? config)
-                            [config segments]
-                            [{} (cons config segments)])
-        segments (vec (filter identity segments))]
-    (merge {:route/name sym
-            :route/config config
-            :route/segments segments}
-           route)))
-
-(defmethod aero/reader 'http/get
-  [_ _ route]
-  (http-route route :method :get))
-
-(defmethod aero/reader 'http/post
-  [_ _ route]
-  (http-route route :method :post))
-
-(defmethod aero/reader 'http/delete
-  [_ _ route]
-  (http-route route :method :delete))
-
-(defn- url [_ {:url/keys [join]} params]
-  (clojure.string/join "/" (map #(get params %1 %1) join)))
-
-(defn- req-key [ns-segments kname]
-  (keyword
-    (string/join
-      "/"
-      [(string/join "." (map name (filter identity ns-segments)))
-       (name kname)])))
-
-(defn- req-kv [client route subroute]
-  (let [{:harrow/keys [base root-ns]} client
-        req-name (:route/name subroute)
-        req-ns (concat [root-ns] (filter string? route))
-        ns-segments (filter identity req-ns)
-        req-join (concat [base]
-                         (butlast route)
-                         (:route/segments subroute))
-
-        k (keyword
-            (string/join "/"
-                         [(string/join "." (map name ns-segments))
-                          (name req-name)]))
-        v (assoc subroute :url/join req-join)]
-    [k v]))
-
-(defn- req-kvs [client route]
-  (let [{:harrow/keys [base root-ns]} client
-        subroutes (last route)
-        route-name (first subroutes)
-        named? (or (string? route-name) (keyword? route-name))
-        [route-name subroutes] (if named?
-                                 [route-name (rest subroutes)]
-                                 [nil subroutes])]
-    (map (partial req-kv client route) subroutes)))
 
 (defn desc->client [{:keys [routes] :as desc}]
   (as-> desc $
     (clojure.set/rename-keys $ {:root-ns :harrow/root-ns
                                 :base :harrow/base
                                 :routes :harrow/routes})
-    (assoc $ :harrow/requests (into {} (mapcat #(req-kvs $ %) routes)))))
+    (assoc $ :harrow/requests (into {} (mapcat #(req/kvs $ %) routes)))))
 
 (defn build-client [file]
   (desc->client (aero/read-config file)))
 
 (defn build-request [client endpoint params]
   (let [route (get-in client [:harrow/requests endpoint])
-        route-url (url client route params)
+        route-url (req/url client route params)
         {:harrow/keys [pass-thru-config pass-thru-params]
          :or {pass-thru-config [:headers]
               pass-thru-params [:query-params]}} client]
@@ -90,6 +29,7 @@
   (-> client :harrow/requests keys))
 
 (comment
+  (require '[clojure.java.io :as io])
   (def $client (build-client (io/resource "client.edn")))
 
   (aero/read-config (io/resource "client.edn"))
