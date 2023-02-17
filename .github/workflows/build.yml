@@ -38,5 +38,5 @@ jobs:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
         run: |
-          #clojure -T:build jar
+          git log --oneline | wc -l
           clojure -T:build deploy
