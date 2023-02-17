@@ -36,6 +36,7 @@ jobs:
       - name: Build release
         env:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+          CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
         run: |
           echo test release one two
           clojure -T:build jar
