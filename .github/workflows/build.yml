@@ -1,9 +1,9 @@
 name: release
 run-name: Build a release
-on: [push, pull_request]
-#  pull_request:
-#    types:
-#      - closed
+on:
+  pull_request:
+    types:
+      - closed
 
 jobs:
   build-release:
